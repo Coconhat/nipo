@@ -65,7 +65,9 @@ export default function Dashboard() {
             {/* Toggle Analytics */}
             <div className="flex gap-2">
               <Button
-                variant={activeSidebarTab === "analytics" ? "default" : "outline"}
+                variant={
+                  activeSidebarTab === "analytics" ? "default" : "outline"
+                }
                 size="sm"
                 onClick={() => setActiveSidebarTab("analytics")}
                 className="flex-1 text-xs"
@@ -105,7 +107,10 @@ export default function Dashboard() {
                 onFilterChange={handleFilterChange}
               />
             ) : (
-              <MockAiPanel devices={allDevices} filteredDevices={filteredDevices} />
+              <MockAiPanel
+                devices={allDevices}
+                filteredDevices={filteredDevices}
+              />
             )}
           </div>
 
@@ -145,7 +150,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </main> 
+      </main>
 
       {/* Device Detail Modal */}
       <DeviceDetailModal
