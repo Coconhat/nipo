@@ -5,9 +5,10 @@ import dynamic from "next/dynamic";
 import { getMockDevices, Device } from "@/lib/mock-data";
 import { FilterControls } from "@/components/filter-controls";
 import { AnalyticsPanel } from "@/components/analytics-panel";
+import { MockAiPanel } from "@/components/mock-ai-panel";
 import { DeviceDetailModal } from "@/components/device-detail-modal";
 import { Button } from "@/components/ui/button";
-import { Shield, MapPin, BarChart3 } from "lucide-react";
+import { Shield, MapPin, BarChart3, Bot } from "lucide-react";
 
 const IotMap = dynamic(
   () => import("@/components/iot-map").then((mod) => mod.IotMap),
@@ -18,7 +19,9 @@ export default function Dashboard() {
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
-  const [showAnalytics, setShowAnalytics] = useState(true);
+  const [activeSidebarTab, setActiveSidebarTab] = useState<
+    "analytics" | "filters" | "ai"
+  >("analytics");
 
   useEffect(() => {
     const devices = getMockDevices();
@@ -62,36 +65,47 @@ export default function Dashboard() {
             {/* Toggle Analytics */}
             <div className="flex gap-2">
               <Button
-                variant={showAnalytics ? "default" : "outline"}
+                variant={activeSidebarTab === "analytics" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setShowAnalytics(true)}
+                onClick={() => setActiveSidebarTab("analytics")}
                 className="flex-1 text-xs"
               >
                 <BarChart3 className="w-4 h-4 mr-1" />
                 Analytics
               </Button>
               <Button
-                variant={!showAnalytics ? "default" : "outline"}
+                variant={activeSidebarTab === "filters" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setShowAnalytics(false)}
+                onClick={() => setActiveSidebarTab("filters")}
                 className="flex-1 text-xs"
               >
                 <MapPin className="w-4 h-4 mr-1" />
                 Filters
               </Button>
+              <Button
+                variant={activeSidebarTab === "ai" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveSidebarTab("ai")}
+                className="flex-1 text-xs"
+              >
+                <Bot className="w-4 h-4 mr-1" />
+                AI Agent
+              </Button>
             </div>
 
             {/* Content Area */}
-            {showAnalytics ? (
+            {activeSidebarTab === "analytics" ? (
               <AnalyticsPanel
                 devices={allDevices}
                 filteredDevices={filteredDevices}
               />
-            ) : (
+            ) : activeSidebarTab === "filters" ? (
               <FilterControls
                 devices={allDevices}
                 onFilterChange={handleFilterChange}
               />
+            ) : (
+              <MockAiPanel devices={allDevices} filteredDevices={filteredDevices} />
             )}
           </div>
 
@@ -131,7 +145,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </main>
+      </main> 
 
       {/* Device Detail Modal */}
       <DeviceDetailModal
